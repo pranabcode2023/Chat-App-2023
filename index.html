@@ -17,29 +17,23 @@
     ></script>
     <!-- //NOTE - socket io cdn -->
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-      const socket = io();
-    </script>
-    <!-- <style>
-  body{
-    margin-top: 30px;
-  }
-  </style> -->
+
+  
   </head>
   <body>
     <h1 class="text-center mt-4">My First Chat-App</h1>
     <div class="container">
       <div class="row">
         <div class="col-md-4">
-          <div class="well">
+          <div class="chat-box">
             <h3 class="text-center mt-4">Online users</h3>
             <ul class="list-group" id="users"></ul>
           </div>
         </div>
         <div class="col-md-8">
-          <h3 class="text-center mt-4">Online users</h3>
+          <!-- <h3 class="text-center mt-4">Online users</h3> -->
           <div class="chat id" id="chat"></div>
-          <form id="messageForm">
+          <form id="messageform">
             <div class="form-group">
               <label> Enter Message</label>
               <textarea class="form-control" id="message"></textarea>
@@ -53,5 +47,25 @@
         </div>
       </div>
     </div>
+    <script>
+      $(function () {
+        const socket = io.connect();
+        const $messageForm = $("#messageForm");
+        const $message = $("message");
+        const $chat = $("#chat");
+
+        $messageForm.submit(function (e) {
+          e.preventDefault();
+          socket.emit("send message", $message.value());
+          $message.value('');
+          console.log("submitted");
+        });
+
+        socket.on("new message", function (data) {
+          $chat.append('<div class="chat-box">'  +' <ul class="list-group" id="users">'+data.msg+ '</ul>' +'</div>');
+        });
+      });
+    </script>
+
   </body>
 </html>
