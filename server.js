@@ -44,10 +44,14 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 users = [];
+connections = [];
 io.on("connection", function (socket) {
-  console.log("A user connected");
+  // console.log("A user connected");
+  connections.push(socket);
+  console.log("connected : %s socket connectd", connections.length);
   socket.on("setUsername", function (data) {
     console.log(data);
+    console.log("disconnected: %s socket disconnectd", connections.length);
     if (users.indexOf(data) > -1) {
       socket.emit(
         "userExists",
@@ -64,5 +68,5 @@ io.on("connection", function (socket) {
   });
 });
 http.listen(3000, function () {
-  console.log("listening on localhost:3000");
+  console.log("server listening on localhost:3000");
 });
